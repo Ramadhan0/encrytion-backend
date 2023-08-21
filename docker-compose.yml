@@ -1,0 +1,28 @@
+version: '3'
+services:
+  ecom-app:
+    container_name: ecom
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://rama:test123TH@localhost:5432/ecomdb
+      NODE_ENV: development
+      PORT: 3001
+    ports:
+      - '3001:3001'
+  postgres:
+    container_name: postgres
+    image: postgres:10.4
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgresdata:/var/lib/postgresql/data
+      - ./src/database/migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+    restart: always
+    environment:
+      POSTGRES_USER: rama
+      POSTGRES_PASSWORD: test123TH
+      POSTGRES_DB: ecom
